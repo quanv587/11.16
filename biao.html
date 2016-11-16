@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style>
+    .clock{
+        width: 600px;
+        height: 600px;
+        border:15px solid#ccc;
+        position: absolute;
+        left:0;top:0;right:0;bottom:0;
+        margin:auto;
+        border-radius:50%;
+    }
+</style>
+<body>
+<div class="clock"></div>
+<script>
+    window.onload=function(){
+        var time=new Date();
+        var clock=document.querySelector(".clock");
+//创建刻度
+        function createMark(){
+            for (i=0;i<60;i++){
+                var w,h;
+                if(i%5==0){
+                    w=6;h=8;
+                }else{
+                    w=3;h=4;
+                }
+                var div=document.createElement("div");
+                div.style.cssText="width:"+w+"px;height:"+h+"px;background:#000;position:absolute;left:0;top:0";
+                div.style.transform="translate("+(600-w)/2+"px,0) rotate("+i*6+"deg)";
+                div.style.transformOrigin="center 300px";
+                clock.appendChild(div);
+            }
+        }
+        createMark();
+
+//创建指针  宽高色度
+        function createPointer(w,h,c,a){
+            var div=document.createElement("div");
+            div.h=h;
+            div.w=w;
+            div.style.cssText="width:"+w+"px;height:"+h+"px;background:"+c+";position:absolute;left:0;top:0";
+            div.style.transform="translate("+(600-w)/2+"px,"+(300-h)+"px) rotate("+a+"deg)";
+            div.style.transformOrigin="center bottom";
+            clock.appendChild(div);
+            return div;
+        }
+
+        var hpointer=createPointer(10,30,"#000",time.getHours()*30+time.getMinutes()*6/12);
+        var mpointer=createPointer(6,50,"pink",time.getMinutes()*6);
+        var spointer=createPointer(3,90,"red",time.getSeconds()*6);
+
+
+        var t=setInterval(function(){
+            var time=new Date();
+            hpointer.style.transform="translate("+(600-hpointer.w)/2+"px,"+(300-hpointer.h)+"px) rotate("+(time.getHours()*30+time.getMinutes()*6/12)+"deg)";
+            mpointer.style.transform="translate("+(600-mpointer.w)/2+"px,"+(300-mpointer.h)+"px) rotate("+(time.getMinutes()*6+time.getSeconds()*6/360)+"deg)";
+            spointer.style.transform="translate("+(600-spointer.w)/2+"px,"+(300-spointer.h)+"px) rotate("+(time.getSeconds()*6)+"deg)";
+        },1000)
+    }
+</script>
+</body>
+</html>
